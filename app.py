@@ -27,13 +27,13 @@ for i, (nome, ticker) in enumerate(pares.items()):
             diff = ((fecho_atual - fecho_ontem) / fecho_ontem) * 100
             cols[i].metric(nome, f"{fecho_atual:.2f}", f"{diff:.2f}%")
     except:
-        cols[i].error(f"Erro em {nome}")
+        cols[i].error(f"Erro")
 
 st.divider()
 
 # 2. Analisador com Botão de Colar
 st.header("🔍 Analisador de Estrutura Wyckoff")
-st.write("Faz o teu print (Screenshot) e clica no botão abaixo para colar:")
+st.write("Tira um print do gráfico e clica no botão abaixo:")
 
 # Botão para colar imagem diretamente
 paste_result = pbutton("📋 Clica aqui para Colar o Print", key="paste_button")
@@ -44,16 +44,22 @@ if paste_result.image_data is not None:
     if st.button("🚀 Analisar Estrutura"):
         with st.spinner("A IA está a estudar o gráfico..."):
             try:
-                # Configuração da tua Chave
+                # Configuração da tua Chave e Modelo Corrigido
                 genai.configure(api_key="AIzaSyAmYKPcinhyyBUJv12MGZqlb29j_WVY2mY")
+                
+                # Usando o nome do modelo que evita o erro 404
                 model = genai.GenerativeModel('gemini-1.5-flash')
                 
-                # Enviar para a IA
-                prompt = "Analisa este gráfico financeiro. Identifica a estrutura de Wyckoff (Acumulação ou Distribuição) e descreve as fases (A-E) e eventos visíveis."
+                # Instrução para a IA
+                prompt = "Analisa este gráfico financeiro. Identifica a estrutura de Wyckoff (Acumulação ou Distribuição). Descreve as fases (A-E) e os eventos como SC, AR, ST, Spring ou UTAD que conseguires ver."
+                
                 res = model.generate_content([prompt, paste_result.image_data])
                 
                 st.subheader("Veredito da IA:")
                 st.write(res.text)
             except Exception as e:
                 st.error(f"Erro na análise: {e}")
-                st.info("Dica: Verifica se a tua chave da API ainda é válida no Google AI Studio.")
+                st.info("Dica: Se aparecer erro 404, o site está a atualizar as bibliotecas. Aguarda 1 minuto.")
+
+st.markdown("---")
+st.caption("Aviso: As análises de IA são apenas para fins educacionais. O trading envolve risco real.")

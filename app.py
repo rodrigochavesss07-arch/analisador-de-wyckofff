@@ -45,7 +45,7 @@ if paste_result.image_data is not None:
         with st.spinner("A IA está a estudar o gráfico..."):
             try:
                 # Configuração da tua NOVA Chave
-                genai.configure(api_key="AIzaSyBQ9GBEzALasMWbr4K-acbp7IGds5bNh-0")
+                genai.configure(api_key=AIzaSyBQ9GBEzALasMWbr4K-acbp7IGds5bNh-0)
                 
                 # Modelo estável para evitar erro 404 e 429
                 model = genai.GenerativeModel('gemini-1.5-flash-latest')

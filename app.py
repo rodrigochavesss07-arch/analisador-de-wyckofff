@@ -48,7 +48,7 @@ if paste_result.image_data is not None:
                 genai.configure(api_key="AIzaSyAmYKPcinhyyBUJv12MGZqlb29j_WVY2mY")
                 
                 # Modelo atualizado para evitar erro 404
-                model = genai.GenerativeModel('gemini-1.5-flash-latest')
+                model = genai.GenerativeModel('gemini-2.0-flash')
                 
                 # Instrução para a IA
                 prompt = "Analisa este gráfico financeiro. Identifica se é uma estrutura de Wyckoff de Acumulação ou Distribuição. Descreve as fases A, B, C, D, E e eventos como Spring, UTAD, SC, AR se visíveis."

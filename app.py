@@ -27,13 +27,13 @@ for i, (nome, ticker) in enumerate(pares.items()):
             diff = ((fecho_atual - fecho_ontem) / fecho_ontem) * 100
             cols[i].metric(nome, f"{fecho_atual:.2f}", f"{diff:.2f}%")
     except:
-        cols[i].error(f"Erro")
+        cols[i].error("Erro")
 
 st.divider()
 
 # 2. Analisador com Botão de Colar
 st.header("🔍 Analisador de Estrutura Wyckoff")
-st.write("Tira um print do gráfico e clica no botão abaixo:")
+st.write("Tira um print do gráfico (Win+Shift+S) e clica no botão abaixo:")
 
 # Botão para colar imagem diretamente
 paste_result = pbutton("📋 Clica aqui para Colar o Print", key="paste_button")
@@ -44,14 +44,14 @@ if paste_result.image_data is not None:
     if st.button("🚀 Analisar Estrutura"):
         with st.spinner("A IA está a estudar o gráfico..."):
             try:
-                # Configuração da tua Chave e Modelo Corrigido
+                # Configuração da tua Chave
                 genai.configure(api_key="AIzaSyAmYKPcinhyyBUJv12MGZqlb29j_WVY2mY")
                 
-                # Usando o nome do modelo que evita o erro 404
-                model = genai.GenerativeModel('gemini-1.5-flash')
+                # Modelo atualizado para evitar erro 404
+                model = genai.GenerativeModel('gemini-1.5-flash-latest')
                 
                 # Instrução para a IA
-                prompt = "Analisa este gráfico financeiro. Identifica a estrutura de Wyckoff (Acumulação ou Distribuição). Descreve as fases (A-E) e os eventos como SC, AR, ST, Spring ou UTAD que conseguires ver."
+                prompt = "Analisa este gráfico financeiro. Identifica se é uma estrutura de Wyckoff de Acumulação ou Distribuição. Descreve as fases A, B, C, D, E e eventos como Spring, UTAD, SC, AR se visíveis."
                 
                 res = model.generate_content([prompt, paste_result.image_data])
                 
@@ -59,7 +59,7 @@ if paste_result.image_data is not None:
                 st.write(res.text)
             except Exception as e:
                 st.error(f"Erro na análise: {e}")
-                st.info("Dica: Se aparecer erro 404, o site está a atualizar as bibliotecas. Aguarda 1 minuto.")
+                st.info("Dica: Se o erro persistir, faz 'Reboot' na barra 'Manage App' do Streamlit.")
 
 st.markdown("---")
-st.caption("Aviso: As análises de IA são apenas para fins educacionais. O trading envolve risco real.")
+st.caption("Aviso: Ferramenta educacional. Trading envolve risco real de perda de capital.")

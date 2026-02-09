@@ -4,7 +4,7 @@ import google.generativeai as genai
 from PIL import Image
 from streamlit_paste_button import paste_image_button as pbutton
 
-# Configuração Visual Clean
+# Configuração Visual Estilo Clean
 st.set_page_config(page_title="Wyckoff AI - Rodrigo", layout="wide")
 
 # 1. Painel de Tendências no topo
@@ -27,13 +27,13 @@ for i, (nome, ticker) in enumerate(pares.items()):
             diff = ((fecho_atual - fecho_ontem) / fecho_ontem) * 100
             cols[i].metric(nome, f"{fecho_atual:.2f}", f"{diff:.2f}%")
     except:
-        cols[i].error("Erro")
+        cols[i].error("Off")
 
 st.divider()
 
 # 2. Analisador com Botão de Colar
 st.header("🔍 Analisador de Estrutura Wyckoff")
-st.write("Tira um print (Win+Shift+S), volta aqui e clica no botão abaixo:")
+st.write("Tire um print (Win+Shift+S), volte aqui e clique no botão azul:")
 
 # Botão para colar imagem diretamente
 paste_result = pbutton("📋 Clica aqui para Colar o Print", key="paste_button")
@@ -47,21 +47,29 @@ if paste_result.image_data is not None:
                 # Configuração da tua NOVA Chave
                 genai.configure(api_key="AIzaSyBQ9GBEzALasMWbr4K-acbp7IGds5bNh-0")
                 
-                # Modelo 1.5 Flash (O mais estável para evitar erro 429)
-                model = genai.GenerativeModel('gemini-1.5-flash')
+                # Modelo estável para evitar erro 404 e 429
+                model = genai.GenerativeModel('gemini-1.5-flash-latest')
                 
-                # Instrução para a IA
-                prompt = "Analisa este gráfico financeiro. Identifica se é uma estrutura de Wyckoff de Acumulação ou Distribuição. Descreve as fases A, B, C, D, E e eventos como Spring, UTAD, SC, AR se visíveis."
+                # Instrução detalhada para a IA
+                prompt = (
+                    "Age como um analista sénior de trading. Analisa este gráfico e identifica "
+                    "se estamos numa estrutura de Wyckoff de Acumulação ou Distribuição. "
+                    "Identifica as fases (A a E) e aponta eventos como SC, AR, ST, Spring ou UTAD."
+                )
                 
                 res = model.generate_content([prompt, paste_result.image_data])
                 
+                st.success("✅ Análise Concluída!")
                 st.subheader("Veredito da IA:")
                 st.write(res.text)
+                
             except Exception as e:
                 if "429" in str(e):
-                    st.error("Erro: Limite de uso atingido. Aguarda 1 minuto ou tenta novamente amanhã.")
+                    st.error("⚠️ Quota Excedida: O Google limitou os teus pedidos por hoje. Tenta daqui a uns minutos.")
+                elif "404" in str(e):
+                    st.error("⚠️ Erro 404: O modelo Gemini está em manutenção ou o ID mudou. Tenta novamente.")
                 else:
-                    st.error(f"Erro na análise: {e}")
+                    st.error(f"❌ Erro na análise: {e}")
 
 st.markdown("---")
-st.caption("Aviso: Ferramenta educacional. Trading envolve risco real de perda de capital.")
+st.caption("Aviso: Ferramenta educativa. O trading de ativos financeiros envolve risco elevado.")

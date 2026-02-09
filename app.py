@@ -26,7 +26,7 @@ if upload:
     img = Image.open(upload)
     st.image(img, use_container_width=True)
     if st.button("Analisar com IA"):
-        genai.configure(api_key=gen-lang-client-0267773444)
+        genai.configure(api_key="gen-lang-client-0267773444")
         model = genai.GenerativeModel('gemini-1.5-flash')
         res = model.generate_content(["Analisa este gráfico e identifica a estrutura de Wyckoff (Acumulação/Distribuição) e as fases visíveis.", img])
         st.write(res.text)

@@ -45,7 +45,7 @@ if paste_result.image_data is not None:
         with st.spinner("A IA está a estudar o gráfico..."):
             try:
                 # Configuração da tua Chave
-                genai.configure(api_key="gen-lang-client-0267773444")
+                genai.configure(api_key=AIzaSyAmYKPcinhyyBUJv12MGZqlb29j_WVY2mY)
                 model = genai.GenerativeModel('gemini-1.5-flash')
                 
                 # Enviar para a IA
